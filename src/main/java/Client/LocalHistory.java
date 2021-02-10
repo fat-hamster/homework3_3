@@ -1,8 +1,10 @@
 package Client;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class LocalHistory {
@@ -22,6 +24,10 @@ public class LocalHistory {
         }
         try {
             fileWriter = new FileWriter(file, true);
+            Date dateNow = new Date();
+            SimpleDateFormat formatForDateNow = new SimpleDateFormat("E yyyy.MM.dd 'и время' hh:mm:ss a zzz");
+            fileWriter.write(dateNow.toString() + '\n');
+            fileWriter.flush();
             lineReader = new ReverseLineReader(file, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,6 +35,7 @@ public class LocalHistory {
     }
 
     public void writeHistory(String str) {
+        StringBuilder sb = new StringBuilder();
         try {
             fileWriter.write(str + '\n');
             fileWriter.flush();
@@ -62,6 +69,12 @@ public class LocalHistory {
     }
 
     public void close() {
-
+        try {
+            fileWriter.flush();
+            fileWriter.close();
+            lineReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
