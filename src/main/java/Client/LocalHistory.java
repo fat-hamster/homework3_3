@@ -25,7 +25,7 @@ public class LocalHistory {
         try {
             fileWriter = new FileWriter(file, true);
             Date dateNow = new Date();
-            SimpleDateFormat formatForDateNow = new SimpleDateFormat("E yyyy.MM.dd 'и время' hh:mm:ss a zzz");
+            SimpleDateFormat formatForDateNow = new SimpleDateFormat("E dd.MM.yyyy 'и время' hh:mm:ss a zzz");
             fileWriter.write(dateNow.toString() + '\n');
             fileWriter.flush();
             lineReader = new ReverseLineReader(file, "UTF-8");
