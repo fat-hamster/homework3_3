@@ -35,7 +35,6 @@ public class LocalHistory {
     }
 
     public void writeHistory(String str) {
-        StringBuilder sb = new StringBuilder();
         try {
             fileWriter.write(str + '\n');
             fileWriter.flush();
