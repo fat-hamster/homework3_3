@@ -12,7 +12,6 @@ public class MyClient extends JFrame {
     private final ServerService serverService;
     private final LocalHistory localHistory;
 
-
     public MyClient() {
         super("Simple Chat");
 
@@ -20,7 +19,25 @@ public class MyClient extends JFrame {
         serverService = new SocketServerService();
         serverService.openConnection();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowListener() {
+            public void windowActivated(WindowEvent event) {
+            }
+            public void windowClosed(WindowEvent event) {
+            }
+            public void windowClosing(WindowEvent event) {
+                exitApp(event);
+            }
+            public void windowDeactivated(WindowEvent event) {
+            }
+            public void windowDeiconified(WindowEvent event) {
+            }
+            public void windowIconified(WindowEvent event) {
+            }
+            public void windowOpened(WindowEvent event) {
+            }
+        });
+
         setLayout(new FlowLayout());
         setBounds(400, 400, 520, 350);
         setResizable(false);
@@ -32,7 +49,10 @@ public class MyClient extends JFrame {
         mainChat.setRows(15);
         mainChat.setFocusable(false);
         mainChat.setEditable(false);
+        mainChat.setLineWrap(true);
         mainChat.setBorder(BorderFactory.createEtchedBorder());
+        JScrollPane scroll = new JScrollPane (mainChat,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         JTextField myMessage = new JTextField();
         myMessage.setSize(100, 400);
@@ -63,13 +83,14 @@ public class MyClient extends JFrame {
             }
         });
 
-        JButton clear = new JButton("Exit");
-        clear.setSize(50, 200);
-        clear.addActionListener(actionEvent -> exitButton());
+        JButton exitButton = new JButton("Exit");
+        exitButton.setSize(50, 200);
+        exitButton.addActionListener(actionEvent -> exitButton());
 
         add(status);
 
-        add(mainChat);
+        //add(mainChat);
+        add(scroll);
         add(myMessage);
 
         add(loginLabel);
@@ -78,11 +99,25 @@ public class MyClient extends JFrame {
         add(password);
 
         add(send);
-        add(clear);
+        add(exitButton);
 
         myMessage.setEditable(false);
         if(!serverService.getError().isEmpty()) {
             mainChat.append(serverService.getError());
+        }
+    }
+
+    private void exitApp(WindowEvent event) {
+        Object[] options = { "Да", "Нет!" };
+        int n = JOptionPane
+                .showOptionDialog(event.getWindow(), "Закрыть окно?",
+                        "Подтверждение", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, options,
+                        options[0]);
+        if (n == 0) {
+            localHistory.close();
+            serverService.closeConnection();
+            System.exit(0);
         }
     }
 
@@ -129,6 +164,7 @@ public class MyClient extends JFrame {
     private void exitButton() {
         localHistory.close();
         serverService.closeConnection();
+        System.exit(0);
     }
 
     private void sendMessage(JTextField myMessage) {
