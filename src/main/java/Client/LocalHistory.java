@@ -26,7 +26,7 @@ public class LocalHistory {
             fileWriter = new FileWriter(file, true);
             Date dateNow = new Date();
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("E dd.MM.yyyy 'и время' hh:mm:ss a zzz");
-            fileWriter.write(dateNow.toString() + '\n');
+            fileWriter.write(formatForDateNow.format(dateNow) + '\n');
             fileWriter.flush();
             lineReader = new ReverseLineReader(file, "UTF-8");
         } catch (IOException e) {
@@ -35,7 +35,6 @@ public class LocalHistory {
     }
 
     public void writeHistory(String str) {
-        StringBuilder sb = new StringBuilder();
         try {
             fileWriter.write(str + '\n');
             fileWriter.flush();
